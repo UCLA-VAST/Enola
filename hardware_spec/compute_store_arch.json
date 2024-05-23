@@ -1,0 +1,10 @@
+{
+    "R_B": 6,
+    "AOD_SEP": 2,
+    "RYD_SEP": 15,
+    "SITE_SLMS": 2,
+    "SLM_SEP": 2,
+    "SITE_WIDTH": 4,
+    "T_RYDBERG": 0.36,
+    "T_ACTIVATE": 15
+}
