@@ -2,7 +2,7 @@ from enola.router.router_mis import route_qubit_mis
 from enola.router.codegen import CodeGen
 import time
 
-from memory_profiler import profile
+# from memory_profiler import profile
 
 # @profile
 def route_qubit(n_x: int, n_y: int, n_q: int, list_full_gates: list, qubit_mapping: list, routing_strategy: str, \

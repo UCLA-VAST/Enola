@@ -9,7 +9,7 @@ import json
 class Enola:
     """class to solve QLS problem."""
 
-    def __init__(self, name: str, dir: str = None, print_detail: bool = False, trivial_layout = False, routing_strategy = "mis",\
+    def __init__(self, name: str, dir: str = None, print_detail: bool = False, trivial_layout = False, routing_strategy = "maximalis_sorted",\
                 to_verify: bool = False, reverse_to_initial:bool = False,\
                 initial_mapping: list = None, dependency: bool = False, l2: bool = False, use_window: bool = False, full_code: bool = False):
         self.dir = dir
