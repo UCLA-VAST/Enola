@@ -9,7 +9,10 @@ import json
 class Enola:
     """class to solve QLS problem."""
 
-    def __init__(self, name: str, dir: str = None, print_detail: bool = False, trivial_layout = False, routing_strategy = "maximalis_sorted",\
+    def __init__(self, name: str, dir: str = None, print_detail: bool = False, 
+                 placement_opt = -1,
+                 routing_opt = -1,
+                 trivial_layout = False, routing_strategy = "maximalis_sorted",\
                 to_verify: bool = False, reverse_to_initial:bool = False,\
                 initial_mapping: list = None, dependency: bool = False, l2: bool = False, use_window: bool = False, full_code: bool = False):
         self.dir = dir
@@ -25,13 +28,31 @@ class Enola:
         self.result_json['name'] = name
         self.result_json['layers'] = []
         self.to_verify = to_verify
+        if placement_opt == 0:
+            self.trivial_layout = True
+            self.reverse_to_initial = True
+        elif placement_opt == 1:
+            self.trivial_layout = False
+            self.self.reverse_to_initial = True
+        elif placement_opt == 2:
+            self.trivial_layout = False
+            self.self.reverse_to_initial = False
+        if routing_opt == 0:
+            self.routing_strategy = "maximalis_sorted"
+            self.use_window = True
+        elif routing_opt == 1:
+            self.routing_strategy = "maximalis_sorted"
+            self.use_window = False
+        elif routing_opt == 2:
+            self.routing_strategy = "mis"
+            self.use_window = False
         self.trivial_layout = trivial_layout
-        self.routing_strategy = routing_strategy
         self.reverse_to_initial = reverse_to_initial
         self.given_initial_mapping = initial_mapping
         self.has_dependency = dependency
-        self.l2 = l2
+        self.routing_strategy = routing_strategy
         self.use_window = use_window
+        self.l2 = l2
         global_dict["full_code"] = full_code
 
     def setArchitecture(self, bounds: Sequence[int]):
