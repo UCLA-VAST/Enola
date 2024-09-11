@@ -1,6 +1,4 @@
 from typing import Sequence, Mapping, Any
-import matplotlib.pyplot as plt
-import matplotlib
 import networkx as nx
 import argparse
 from abc import ABC, abstractmethod
