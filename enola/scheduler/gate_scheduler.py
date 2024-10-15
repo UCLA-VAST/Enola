@@ -115,11 +115,27 @@ def graph_coloring(n_qubit: int, list_gate: list) -> int:
     return int(not coloring_is_optimal), result  # return 0 if everything went smoothly
 
 
+
+def graph_coloring_rustworkx(n_qubit: int, list_gate: list):
+    graph = rx.PyGraph()
+    graph.add_nodes_from(list(range(n_qubit)))
+    for edge in list_gate:
+        graph.add_edge(edge[0], edge[1], edge)
+    edge_colors = rx.graph_misra_gries_edge_color(graph)
+    max_color = 0
+    for i in edge_colors:
+        max_color = max(max_color, edge_colors[i])
+    result = [[] for i in range(max_color + 1)]
+    for i in range(len(list_gate)):
+        result[edge_colors[i]].append(i)
+    return 0, result
+
 def gate_scheduling(n_qubit: int, list_gate: list):
     """
     solve gate scheduling problem for all-commutable gate cases by graph coloring algorithm
     """
-    status, result = graph_coloring(n_qubit, list_gate)
+    # status, result = graph_coloring(n_qubit, list_gate)
+    status, result = graph_coloring_rustworkx(n_qubit, list_gate)
     assert (
         status == 0
     ), "The proposed edge coloring is probably wrong as the output doesn't match Vizing's theorem."
