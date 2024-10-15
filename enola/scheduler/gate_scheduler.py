@@ -6,7 +6,7 @@ from typing import Sequence, Tuple
 from enola.scheduler.sequence_view import SequenceView
 from enola.scheduler.graph import Graph
 from enola.scheduler.custom_types import *
-
+import rustworkx as rx
 
 def find_maximal_fan(g: Graph, x: NodeType, f: NodeType) -> FanType:
     fan_x = [f]
