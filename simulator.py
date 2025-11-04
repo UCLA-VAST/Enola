@@ -16,7 +16,7 @@ class Simulator():
         """
         # define fidelity parameter
         self.fidelity_2q_gate = 0.995
-        self.fidelity_1q_gate = 0.995
+        self.fidelity_1q_gate = 0.9997
         self.fidelity_atom_transfer = 0.999
         self.coherence_time = 1.5e6 # ms
         if "2QG" in param_fidelity:
@@ -98,6 +98,19 @@ class Simulator():
                         self.cir_qubit_idle_time[i] += duration
                     num_movement_stage += 1
                     list_movement_duration.append(duration)
+            elif instruction["type"] == "single_qubit_gate":
+                list_gates = instruction["gates"]
+                list_active_qubit = [False for i in range(self.n_qubit)]
+                if len(list_gates) == 0:
+                    continue
+                for gate in list_gates:
+                    list_active_qubit[gate["q"]] = True
+                for i in range(self.n_qubit):
+                    if not list_active_qubit[i]:
+                        self.cir_qubit_idle_time[i] += duration
+                # calculate the fidelity of single-qubit gates
+                self.cir_fidelity_1q_gate *= pow(self.fidelity_1q_gate, len(list_gates))
+                
             else:
                 raise ValueError("Wrong instruction type")
             # print("after {}, the fidelity is:".format(instruction["type"]))
@@ -127,9 +140,10 @@ class Simulator():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('input_file', type=str)
+    parser.add_argument('--dir', help='working directory', type=str)
     parser.add_argument('--codeGen', help='require codeGen', action='store_true', default=False)
-    parser.add_argument('--arch_param', help='hardware parameters for Enola', type=str, default = "hardware_spec/compute_store_arch.json")
-    parser.add_argument('--fidelity_param', help='hardware fidelity for Enola', type=str, default = "hardware_spec/compute_store_arch_fidelity.json")
+    parser.add_argument('--arch_param', help='hardware parameters for DPQA', type=str, default = "hardware_spec/compute_store_arch.json")
+    parser.add_argument('--fidelity_param', help='hardware fidelity for DPQA', type=str, default = "hardware_spec/compute_store_arch_fidelity.json")
     args = parser.parse_args()
 
     with open(args.input_file, 'r') as f:
@@ -144,7 +158,7 @@ if __name__ == "__main__":
         codegen = CodeGen(
             args.input_file,
             no_transfer=False,
-            dir='./results/fidelity/'
+            dir=args.dir if args.dir else './test/code/'
         )
         file_name = codegen.code_full_file
 
@@ -153,7 +167,7 @@ if __name__ == "__main__":
 
     simulator = Simulator(file_name, param_fidelity)
     fideilty_result = simulator.simulate()
-    directory = './results/fidelity/'
+    directory = args.dir if args.dir else './test/fidelity/'
     filename = directory + \
             (args.input_file.split('/')[-1]).replace('.json', '_fidelity.json')
     with open(filename, 'w') as f:  

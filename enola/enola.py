@@ -9,12 +9,12 @@ import json
 class Enola:
     """class to solve QLS problem."""
 
-    def __init__(self, name: str, dir: str = None, print_detail: bool = False, 
+    def __init__(self, name: str, dir: str | None = None, print_detail: bool = False, 
                  placement_opt = -1,
                  routing_opt = -1,
                  trivial_layout = False, routing_strategy = "maximalis_sorted",\
                 to_verify: bool = False, reverse_to_initial:bool = False,\
-                initial_mapping: list = None, dependency: bool = False, l2: bool = False, use_window: bool = False, full_code: bool = False):
+                initial_mapping: list | None = None, dependency: bool = False, l2: bool = False, use_window: bool = False, full_code: bool = False):
         self.dir = dir
         self.n_q = 0 # number of qubits
         self.n_g = 0 # number of gates
@@ -33,10 +33,10 @@ class Enola:
             self.reverse_to_initial = True
         elif placement_opt == 1:
             self.trivial_layout = False
-            self.self.reverse_to_initial = True
+            self.reverse_to_initial = True
         elif placement_opt == 2:
             self.trivial_layout = False
-            self.self.reverse_to_initial = False
+            self.reverse_to_initial = False
         if routing_opt == 0:
             self.routing_strategy = "maximalis_sorted"
             self.use_window = True
@@ -97,11 +97,11 @@ class Enola:
         print("[INFO] Enola: Time for scheduling: {}s".format(runtime_analysis["scheduling"]))
 
         t_p = time.time()
+        qubit_mapping = []
         if self.given_initial_mapping is not None:
             qubit_mapping = self.given_initial_mapping
         else:
             # qubit placement for layout
-            qubit_mapping = []
             if self.trivial_layout:
                 length = self.n_x
                 print(length)
